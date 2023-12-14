@@ -2,21 +2,38 @@ import {
   WebSocketGateway,
   SubscribeMessage,
   MessageBody,
+  WebSocketServer,
 } from '@nestjs/websockets';
-import { ChatGatewayService } from '../chat-gateway.service';
+import { ChatGatewayService } from '../services/chat-gateway.service';
 import { CreateChatGatewayDto } from '../dto/create-chat-gateway.dto';
 import { UpdateChatGatewayDto } from '../dto/update-chat-gateway.dto';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({ cors: true })
 export class ChatGatewayGateway {
+  @WebSocketServer() wss: Server;
+
   constructor(private readonly chatGatewayService: ChatGatewayService) {}
 
   handleConnection(client: Socket) {
-    console.log('Cliente conectado', client.id);
+    this.chatGatewayService.registerClient(client);
+    this.wss.emit(
+      'clientsUpdated',
+      this.chatGatewayService.getConnectedClient(),
+    );
+    console.log({
+      conectados: this.chatGatewayService.getNumberOfConnectedClient(),
+    });
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Cliente desconectado', client.id);
+    this.chatGatewayService.removeClient(client.id);
+    this.wss.emit(
+      'clientsUpdated',
+      this.chatGatewayService.getConnectedClient(),
+    );
+    console.log({
+      conectados: this.chatGatewayService.getNumberOfConnectedClient(),
+    });
   }
 }

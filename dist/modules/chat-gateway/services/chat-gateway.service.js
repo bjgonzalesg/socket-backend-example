@@ -19,6 +19,9 @@ let ChatGatewayService = class ChatGatewayService {
         delete this.connectedClients[clientId];
     }
     getConnectedClient() {
+        return Object.keys(this.connectedClients);
+    }
+    getNumberOfConnectedClient() {
         return Object.keys(this.connectedClients).length;
     }
 };

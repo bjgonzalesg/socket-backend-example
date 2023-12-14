@@ -3,5 +3,6 @@ export declare class ChatGatewayService {
     private connectedClients;
     registerClient(client: Socket): void;
     removeClient(clientId: string): void;
-    getConnectedClient(): number;
+    getConnectedClient(): string[];
+    getNumberOfConnectedClient(): number;
 }

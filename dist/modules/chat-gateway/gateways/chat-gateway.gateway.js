@@ -11,19 +11,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatGatewayGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
-const chat_gateway_service_1 = require("../chat-gateway.service");
+const chat_gateway_service_1 = require("../services/chat-gateway.service");
+const socket_io_1 = require("socket.io");
 let ChatGatewayGateway = class ChatGatewayGateway {
     constructor(chatGatewayService) {
         this.chatGatewayService = chatGatewayService;
     }
     handleConnection(client) {
-        console.log('Cliente conectado', client.id);
+        this.chatGatewayService.registerClient(client);
+        this.wss.emit('clientsUpdated', this.chatGatewayService.getConnectedClient());
+        console.log({
+            conectados: this.chatGatewayService.getNumberOfConnectedClient(),
+        });
     }
     handleDisconnect(client) {
-        console.log('Cliente desconectado', client.id);
+        this.chatGatewayService.removeClient(client.id);
+        this.wss.emit('clientsUpdated', this.chatGatewayService.getConnectedClient());
+        console.log({
+            conectados: this.chatGatewayService.getNumberOfConnectedClient(),
+        });
     }
 };
 exports.ChatGatewayGateway = ChatGatewayGateway;
+__decorate([
+    (0, websockets_1.WebSocketServer)(),
+    __metadata("design:type", socket_io_1.Server)
+], ChatGatewayGateway.prototype, "wss", void 0);
 exports.ChatGatewayGateway = ChatGatewayGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ cors: true }),
     __metadata("design:paramtypes", [chat_gateway_service_1.ChatGatewayService])

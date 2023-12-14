@@ -6,24 +6,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChatGatewayService = void 0;
+exports.ChatGatewayModule = void 0;
 const common_1 = require("@nestjs/common");
-let ChatGatewayService = class ChatGatewayService {
-    constructor() {
-        this.connectedClients = {};
-    }
-    registerClient(client) {
-        this.connectedClients[client.id] = client;
-    }
-    removeClient(clientId) {
-        delete this.connectedClients[clientId];
-    }
-    getConnectedClient() {
-        return Object.keys(this.connectedClients).length;
-    }
+const chat_gateway_service_1 = require("../chat-gateway/services/chat-gateway.service");
+const chat_gateway_gateway_1 = require("./gateways/chat-gateway.gateway");
+let ChatGatewayModule = class ChatGatewayModule {
 };
-exports.ChatGatewayService = ChatGatewayService;
-exports.ChatGatewayService = ChatGatewayService = __decorate([
-    (0, common_1.Injectable)()
-], ChatGatewayService);
-//# sourceMappingURL=chat-gateway.service.js.map
+exports.ChatGatewayModule = ChatGatewayModule;
+exports.ChatGatewayModule = ChatGatewayModule = __decorate([
+    (0, common_1.Module)({
+        providers: [chat_gateway_gateway_1.ChatGatewayGateway, chat_gateway_service_1.ChatGatewayService],
+    })
+], ChatGatewayModule);
+//# sourceMappingURL=chat-gateway.module.js.map
